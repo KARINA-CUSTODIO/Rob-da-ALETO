@@ -72,13 +72,13 @@ def telegram_bot():
      projetos()
      
      mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
-            if message in mensagens:
-                texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
-                if message == 'sim':
-                    for idx, item in enumerate(PL):
-                        texto_resposta = f"{PL[idx][0]}{PL[idx][1]}{PL[idx][2]}{PL[idx][3]}"
-                else:
-                    texto_resposta = "Não entendi!"
-                nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
-                requests.post(f"https://api.telegram.org./bot{token}/sendMessage", data=nova_mensagem)
+      if message in mensagens:
+        texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
+        if message == 'sim':
+          for idx, item in enumerate(PL):
+            texto_resposta = f"{PL[idx][0]}{PL[idx][1]}{PL[idx][2]}{PL[idx][3]}"
+            else:
+              texto_resposta = "Não entendi!"
+              nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
+              requests.post(f"https://api.telegram.org./bot{token}/sendMessage", data=nova_mensagem)
             
