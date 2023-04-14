@@ -3,4 +3,5 @@ gunicorn
 requests
 gspread
 oauth2client
+pandas
 bs4
