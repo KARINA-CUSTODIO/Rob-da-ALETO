@@ -66,6 +66,7 @@ def telegram_bot():
      update = request.json
      chat_id = update["message"]["chat"]["id"]
      message = update["message"]["text"]
+     message = message.lower().strip()
      first_name = update["message"]["from"]["first_name"]
      sender_id = update["message"]["from"]["id"]
      
