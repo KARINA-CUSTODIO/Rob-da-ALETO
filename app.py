@@ -19,7 +19,7 @@ planilha = api.open_by_key("1BTcO4G_FS1tp6_hRcPUk_4fts6ayt7Ms2cvYHsqD9nM")
 sheet = planilha.get_worksheet(3)
 
 def projetos():
-  #extraindo projetos de Lei e requerimentos
+  # extraindo projetos de Lei e requerimentos
   resposta = requests.get('https://al.to.leg.br/materiasLegislativas')
   sopa = BeautifulSoup(resposta.content, 'html.parser')
   PLs = sopa.findAll('div', {'class':'row'}) 
@@ -27,19 +27,14 @@ def projetos():
   for pl in PLs:
     try:
       titulo = pl.find('h4').text
+      data = pl.find('p').text.split('|')[1].split(':')[1].strip()
+      texto = pl.find_all('div', class_= 'col-12')[-1].text
+      path = pl.find('a').attrs['href']
+      url = f'https://al.to.leg.br{path}'
+      PL.append([titulo, data, texto, url])
     except AttributeError:
       print(pl)
-    continue
-    try:
-      data = pl.find('p').text.split('|')[1].split(':')[1].strip()
-    except:
-      print(pl) # print para vermos o que tinha na linha que deu erro
-    break
-    texto = pl.find_all('div', class_= 'col-12')[-1].text
-    path = pl.find('a').attrs['href']
-    url = f'https://al.to.leg.br{path}'
-    PL.append([titulo, data, texto, url])
-    return PL
+  return PL
 
 # Criando site
 
@@ -76,12 +71,12 @@ def telegram_bot():
      if message in mensagens:
         texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
         if message == 'sim':
-          for idx, item in enumerate(PL):
-            texto_resposta = f"{PL[idx][0]}{PL[idx][1]}{PL[idx][2]}{PL[idx][3]}"
-        else:
-            texto_resposta = "Não entendi!"
-            nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
-            requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
+    for idx, item in enumerate(PL):
+        nova_mensagem = {"chat_id": chat_id, "text": f"{PL[idx][0]}{PL[idx][1]}{PL[idx][2]}{PL[idx][3]}"}
+        requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
+     else:
+      nova_mensagem = {"chat_id": chat_id, "text": "Não entendi!"}
+      requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
     except TypeError:
             print(dados)
     except requests.exceptions.RequestException as e:
