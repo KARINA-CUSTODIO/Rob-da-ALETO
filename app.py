@@ -65,19 +65,26 @@ def telegram_bot():
      first_name = update["message"]["from"]["first_name"]
      sender_id = update["message"]["from"]["id"]
      
-     projetos()
+     projetos = projetos()
      
      mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
      if message in mensagens:
         texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
         if message == 'sim':
-    for idx, item in enumerate(PL):
-        nova_mensagem = {"chat_id": chat_id, "text": f"{PL[idx][0]}{PL[idx][1]}{PL[idx][2]}{PL[idx][3]}"}
-        requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
-     else:
-      nova_mensagem = {"chat_id": chat_id, "text": "Não entendi!"}
-      requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
+           mensagens = []
+           for pl in projetos:
+              mensagem = f"{pl[0]}{pl[1]}{pl[2]}{pl[3]}"
+              mensagens.append(mensagem)
+              texto_resposta = "\n".join(mensagens)
+        else:
+            texto_resposta = "Não entendi!"
+    
+    nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
+    resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
+    print(resposta.text)
+    return "ok"      
+    
     except TypeError:
-            print(dados)
+    print(dados)
     except requests.exceptions.RequestException as e:
-            print(f"Erro na requisição: {e}")            
+    print(f"Erro na requisição: {e}")
