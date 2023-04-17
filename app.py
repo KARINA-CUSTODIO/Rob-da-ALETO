@@ -71,11 +71,19 @@ def telegram_bot():
     mensagens = []
     for pl in PL:
         mensagem = f"{pl[0]}{pl[1]}{pl[2]}{pl[3]}"
-        mensagens.append(mensagem)
-        texto_resposta = "\n".join(mensagens)
+        while mensagem:
+            mensagens.append(mensagem[:4096])
+            mensagem = mensagem[4096:]
+        for parte in mensagens:
+            nova_mensagem = {
+                "chat_id": chat_id,
+                "text": parte,
+            }
+            resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
+            print(resposta.text)
   else:
     texto_resposta = "Não entendi!"
-    
+      
   nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
   resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
   print(resposta.text)
