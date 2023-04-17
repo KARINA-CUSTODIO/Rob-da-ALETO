@@ -80,7 +80,7 @@ def telegram_bot():
         print(resposta.text)
         mensagens = []  # Reiniciar lista de mensagens
 
-    mensagem = f"{pl[0]}{pl[1]}{pl[2]}{pl[3]}"
+    mensagem = f"{pl[0]} \n {pl[1]} {pl[2]} \n {pl[3]}"
     mensagens.append(mensagem)
 
     if mensagens:
