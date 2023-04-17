@@ -81,7 +81,7 @@ def telegram_bot():
         else:
             texto_resposta = "Não entendi!"
             nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
-            requests.post(f"https://api.telegram.org./bot{token}/sendMessage", data=nova_mensagem)
+            requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
     except TypeError:
             print(dados)
     except requests.exceptions.RequestException as e:
