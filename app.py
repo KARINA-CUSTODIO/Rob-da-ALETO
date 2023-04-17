@@ -72,8 +72,8 @@ def telegram_bot():
     for pl in PL:
         mensagem = f"{pl[0]}{pl[1]}{pl[2]}{pl[3]}"
         while mensagem:
-            mensagens.append(mensagem[:4096])
-            mensagem = mensagem[4096:]
+            mensagens.append(mensagem[:20])
+            mensagem = mensagem[20:]
         for parte in mensagens:
             nova_mensagem = {
                 "chat_id": chat_id,
