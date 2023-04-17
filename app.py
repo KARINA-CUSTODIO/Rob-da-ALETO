@@ -70,7 +70,7 @@ def telegram_bot():
   elif message == 'sim':
     mensagens = []
     for i, pl in enumerate(PL):
-       if i % 10 == 0:  # Enviar a cada 10 PLs
+      if i % 10 == 0:
         mensagem = "\n".join(mensagens)
         nova_mensagem = {
             "chat_id": chat_id,
