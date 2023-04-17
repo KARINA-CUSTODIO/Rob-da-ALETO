@@ -63,24 +63,35 @@ def telegram_bot():
   message = message.lower().strip()
   first_name = update["message"]["from"]["first_name"]
   sender_id = update["message"]["from"]["id"]
-     
+
   mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
   if message in mensagens:
     texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
   elif message == 'sim':
     mensagens = []
-    for pl in PL:
-        mensagem = f"{pl[0]}{pl[1]}{pl[2]}{pl[3]}"
-        while mensagem:
-            mensagens.append(mensagem[:1000])
-            mensagem = mensagem[1000:]
-        for parte in mensagens:
-            nova_mensagem = {
-                "chat_id": chat_id,
-                "text": parte,
-            }
-            resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
-            print(resposta.text)
+    for i, pl in enumerate(PL):
+       if i % 10 == 0:  # Enviar a cada 10 PLs
+        mensagem = "\n".join(mensagens)
+        nova_mensagem = {
+            "chat_id": chat_id,
+            "text": mensagem,
+        }
+        resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
+        print(resposta.text)
+        mensagens = []  # Reiniciar lista de mensagens
+
+    mensagem = f"{pl[0]}{pl[1]}{pl[2]}{pl[3]}"
+    mensagens.append(mensagem)
+
+    if mensagens:  # Enviar última mensagem com as PLs restantes
+    mensagem = "\n".join(mensagens)
+    nova_mensagem = {
+        "chat_id": chat_id,
+        "text": mensagem,
+    }
+    resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
+    print(resposta.text)
+
   else:
     texto_resposta = "Não entendi!"
       
