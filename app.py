@@ -83,14 +83,14 @@ def telegram_bot():
     mensagem = f"{pl[0]}{pl[1]}{pl[2]}{pl[3]}"
     mensagens.append(mensagem)
 
-    if mensagens:  # Enviar última mensagem com as PLs restantes
-    mensagem = "\n".join(mensagens)
-    nova_mensagem = {
+    if mensagens:
+      mensagem = "\n".join(mensagens)
+      nova_mensagem = {
         "chat_id": chat_id,
         "text": mensagem,
     }
-    resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
-    print(resposta.text)
+      resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
+      print(resposta.text)
 
   else:
     texto_resposta = "Não entendi!"
