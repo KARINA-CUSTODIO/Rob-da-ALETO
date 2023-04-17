@@ -56,28 +56,27 @@ def contato():
 @app.route("/telegram", methods=["POST"])
 
 def telegram_bot():
-    update = request.json
-    chat_id = update["message"]["chat"]["id"]
-    message = update["message"]["text"]
-    message = message.lower().strip()
-    first_name = update["message"]["from"]["first_name"]
-    sender_id = update["message"]["from"]["id"]
+  PL = projetos()
+  update = request.json
+  chat_id = update["message"]["chat"]["id"]
+  message = update["message"]["text"]
+  message = message.lower().strip()
+  first_name = update["message"]["from"]["first_name"]
+  sender_id = update["message"]["from"]["id"]
      
-    projetos = projetos()
-     
-    mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
-    if message in mensagens:
-       texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
-    elif message == 'sim':
-        mensagens = []
-        for pl in projetos:
-            mensagem = f"{pl[0]}{pl[1]}{pl[2]}{pl[3]}"
-            mensagens.append(mensagem)
-            texto_resposta = "\n".join(mensagens)
-    else:
-       texto_resposta = "Não entendi!"
+  mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
+  if message in mensagens:
+    texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
+  elif message == 'sim':
+    mensagens = []
+    for pl in PL:
+        mensagem = f"{pl[0]}{pl[1]}{pl[2]}{pl[3]}"
+        mensagens.append(mensagem)
+        texto_resposta = "\n".join(mensagens)
+  else:
+    texto_resposta = "Não entendi!"
     
-    nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
-    resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
-    print(resposta.text)
-    return "ok"
+  nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
+  resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
+  print(resposta.text)
+  return "ok"
