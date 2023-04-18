@@ -56,19 +56,19 @@ def contato():
 @app.route("/telegram", methods=["POST"])
 
 def telegram_bot():
-    update = request.json
-    print(update)
-    chat_id = update["message"]["chat"]["id"]
-    message = update["message"]["text"]
-    first_name = update["message"]["from"]["first_name"]
-    sender_id = update["message"]["from"]["id"]
+    if 'message' in update:
+      update = request.json
+      chat_id = update["message"]["chat"]["id"]
+      message = update["message"]["text"]
+      first_name = update["message"]["from"]["first_name"]
+      sender_id = update["message"]["from"]["id"]
      
-    PL = projetos()
+      PL = projetos()
        
-    mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
-    if message in mensagens:
+      mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
+      if message in mensagens:
         texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
-    elif message == 'sim':
+      elif message == 'sim':
         mensagens = []
         mensagem = ""
         for pl in PL:
