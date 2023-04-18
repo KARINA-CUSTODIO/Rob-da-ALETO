@@ -59,25 +59,23 @@ def contato():
 
 def telegram_bot():
     update = request.json
-    chat_id = None
-    if 'message' in update:
-      chat_id = update["message"]["chat"]["id"]
-      print(chat_id)
-      message = update["message"]["text"]
-      message = message.strip().lower()
-      first_name = update["message"]["from"]["first_name"]
-      sender_id = update["message"]["from"]["id"]
+    chat_id = update["message"]["chat"]["id"]
+    print(chat_id)
+    message = update["message"]["text"]
+    message = message.strip().lower()
+    first_name = update["message"]["from"]["first_name"]
+    sender_id = update["message"]["from"]["id"]
      
-      PL = projetos()
+    PL = projetos()
        
-      mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
-      if message in mensagens:
-        texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver as últimas Leis sancionadas na Assembleia Legislativa do Tocantins!"
-      elif message == 'sim':
-        texto_PLs = ""
-        for pl in PL:
-            texto_PLs += pl + "\n\n"
-            texto_resposta = texto_PLs
+    mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
+    if message in mensagens:
+      texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver as últimas Leis sancionadas na Assembleia Legislativa do Tocantins!"
+    elif message == 'sim':
+      texto_PLs = ""
+      for pl in PL:
+        texto_PLs += pl + "\n\n"
+        texto_resposta = texto_PLs
       else:
         texto_resposta = "Não entendi!"
     
