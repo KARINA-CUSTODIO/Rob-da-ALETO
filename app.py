@@ -23,18 +23,22 @@ def projetos():
   resposta = requests.get('https://al.to.leg.br/materiasLegislativas')
   sopa = BeautifulSoup(resposta.content, 'html.parser')
   PLs = sopa.findAll('div', {'class':'row'}) 
+  contador = 0
   PL = []
   for pl in PLs:
+    contador += 1
     try:
       titulo = pl.find('h4').text
       data = pl.find('p').text.split('|')[1].split(':')[1].strip()
       texto = pl.find_all('div', class_= 'col-12')[-1].text
       path = pl.find('a').attrs['href']
       url = f'https://al.to.leg.br{path}'
-      PL.append([titulo, data, texto, url])
+      mensagem = f"{titulo} {data} \n {texto} \n {url} \n"
+      PL.append(mensagem)
     except AttributeError:
-      print(pl)
-  return PL
+      print(mensagem)
+  if contador == 10:
+     return PL
 
 # Criando site
 
@@ -60,6 +64,7 @@ def telegram_bot():
     if 'message' in update:
       chat_id = update["message"]["chat"]["id"]
       message = update["message"]["text"]
+      message = message.strip().lower()
       first_name = update["message"]["from"]["first_name"]
       sender_id = update["message"]["from"]["id"]
      
@@ -69,18 +74,10 @@ def telegram_bot():
       if message in mensagens:
         texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
       elif message == 'sim':
-        mensagens = []
-        mensagem = ""
+        texto_PLs = ""
         for pl in PL:
-            mensagem_atual = f"{pl[0]} {pl[1]} \n {pl[2]}{pl[3]}\n"
-            if len(mensagem) + len(mensagem_atual) > 4000:
-                mensagens.append(mensagem)
-                mensagem = mensagem_atual
-            else:
-                mensagem += mensagem_atual
-        if mensagem:
-            mensagens.append(mensagem)
-            texto_resposta = "\n\n".join(mensagens)
+            texto_PLs += pl + "\n\n"
+            texto_resposta = texto_PLs
     else:
         texto_resposta = "Não entendi!"
     
