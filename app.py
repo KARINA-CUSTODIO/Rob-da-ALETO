@@ -10,34 +10,27 @@ from datetime import datetime, timedelta
 
 TELEGRAM_API_KEY = os.environ["TELEGRAM_API_KEY"]
 
-def projetos(limite=10):
-    # extraindo Leis sancionadas
-    resposta = requests.get('https://al.to.leg.br/legislacaoEstadual')
-    sopa = BeautifulSoup(resposta.content, 'html.parser')
-    PLs = sopa.findAll('div', {'class':'row'}) 
-    contador = 0
-    PL = []
-    for pl in PLs:
-        if contador == limite:
-            break
-        try:
-            titulo = pl.find('h4').text
-            data = pl.find('p').text.split('|')[1].split(':')[1].strip()
-            data_pl = datetime.strptime(data, '%d/%m/%Y')
-            # Adiciona a condição para verificar se a data do projeto é de 2023
-            if data_pl.year >= 2023:
-                texto = pl.find_all('div', class_= 'col-12')[-1].text
-                path = pl.find('a').attrs['href']
-                url = f'https://al.to.leg.br{path}'
-                mensagem = f"{titulo} {data} \n {texto} \n {url} \n"
-                PL.append(mensagem)
-            contador += 1
-        except AttributeError:
-            mensagem = "Erro ao extrair informações do projeto de lei"
-            print(mensagem)
-            continue
-    return PL
-
+def projetos():
+  resposta = requests.get('https://al.to.leg.br/materiasLegislativas')
+  sopa = BeautifulSoup(resposta.content, 'html.parser')
+  PLs = sopa.findAll('div', {'class':'row'}) 
+  contador = 0
+  PL = []
+  for pl in PLs:
+    contador += 1
+    try:
+      titulo = pl.find('h4').text
+      data = pl.find('p').text.split('|')[1].split(':')[1].strip()
+      texto = pl.find_all('div', class_= 'col-12')[-1].text
+      path = pl.find('a').attrs['href']
+      url = f'https://al.to.leg.br{path}'
+      mensagem = f"{titulo} {data} \n {texto} \n {url} \n"
+      PL.append(mensagem)
+    except AttributeError:
+      print(mensagem)
+  if contador == 10:
+     return PL
+    
 # Criando site
 
 app = Flask(__name__)
@@ -76,12 +69,12 @@ def telegram_bot():
        
         mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
         if message in mensagens:
-            texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver as últimas Leis sancionadas na Assembleia Legislativa do Tocantins!"
+            texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os Projetos de Lei publicados no site da Assembleia Legislativa do Tocantins!"
         elif message == 'sim':
             texto_PLs = ""
             for pl in PL:
                 texto_PLs += pl + "\n\n"
-                texto_resposta = texto_PLs if texto_PLs else "Não Leis disponíveis."
+                texto_resposta = texto_PLs if texto_PLs else "Não há Projetos de Leis disponíveis."
         else:
             texto_resposta = "Não entendi!"
     
