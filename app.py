@@ -81,7 +81,7 @@ def telegram_bot():
             texto_PLs = ""
             for pl in PL:
                 texto_PLs += pl + "\n\n"
-            texto_resposta = texto_PLs if texto_PLs else "Não Leis disponíveis."
+                texto_resposta = texto_PLs if texto_PLs else "Não Leis disponíveis."
         else:
             texto_resposta = "Não entendi!"
     
