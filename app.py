@@ -67,22 +67,24 @@ def telegram_bot():
        
     mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
     if message in mensagens:
-       texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
+        texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
     elif message == 'sim':
         mensagens = []
+        mensagem = ""
         for pl in PL:
-           mensagem = ""
-           mensagem += f"{pl[0]} {pl[1]} \n {pl[2]}{pl[3]}\n"
-        if len(mensagem) > 4000:  
-            mensagens.append(mensagem)  
-            mensagem = ""
+            mensagem_atual = f"{pl[0]} {pl[1]} \n {pl[2]}{pl[3]}\n"
+            if len(mensagem) + len(mensagem_atual) > 4000:
+                mensagens.append(mensagem)
+                mensagem = mensagem_atual
+            else:
+                mensagem += mensagem_atual
         if mensagem:
-           mensagens.append(mensagem)
-           texto_resposta = "\n\n".join(mensagens)
+            mensagens.append(mensagem)
+            texto_resposta = "\n\n".join(mensagens)
     else:
-       texto_resposta = "Não entendi!"
+        texto_resposta = "Não entendi!"
     
     nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
     resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
     print(resposta.text)
-    return "ok"      
+    return "ok"
