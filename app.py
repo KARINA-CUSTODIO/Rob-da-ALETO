@@ -68,30 +68,16 @@ def telegram_bot():
   if message in mensagens:
     texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
   elif message == 'sim':
-    mensagens = []
-    for i, pl in enumerate(PL):
-      if i % 10 == 0:
-        mensagem = "\n".join(mensagens)
-        nova_mensagem = {
-            "chat_id": chat_id,
-            "text": mensagem,
-        }
-        resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
-        print(resposta.text)
-        mensagens = []  # Reiniciar lista de mensagens
-
-    mensagem = f"{pl[0]} \n {pl[1]} {pl[2]} \n {pl[3]}"
-    mensagens.append(mensagem)
-
-    if mensagens:
-      mensagem = "\n".join(mensagens)
-      nova_mensagem = {
-        "chat_id": chat_id,
-        "text": mensagem,
-    }
-      resposta = requests.post(f"https://api.telegram.org./bot{TELEGRAM_API_KEY}/sendMessage", data=nova_mensagem)
-      print(resposta.text)
-
+   mensagens = []
+    mensagem = ""
+    for pl in PL:
+        mensagem += f"{pl[0]} {pl[1]} \n {pl[2]}{pl[3]}\n"
+        if len(mensagem) > 4000:  
+            mensagens.append(mensagem)  
+            mensagem = ""  
+    if mensagem:  
+        mensagens.append(mensagem)  
+    texto_resposta = "\n\n".join(mensagens)
   else:
     texto_resposta = "Não entendi!"
       
