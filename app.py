@@ -10,14 +10,15 @@ from datetime import datetime, timedelta
 
 TELEGRAM_API_KEY = os.environ["TELEGRAM_API_KEY"]
 
-def projetos():
+def projetos(limite=10):
   resposta = requests.get('https://al.to.leg.br/materiasLegislativas')
   sopa = BeautifulSoup(resposta.content, 'html.parser')
   PLs = sopa.findAll('div', {'class':'row'}) 
   contador = 0
   PL = []
   for pl in PLs:
-    contador += 1
+    if contador == limite:
+      break
     try:
       titulo = pl.find('h4').text
       data = pl.find('p').text.split('|')[1].split(':')[1].strip()
@@ -26,6 +27,7 @@ def projetos():
       url = f'https://al.to.leg.br{path}'
       mensagem = f"{titulo} {data} \n {texto} \n {url} \n"
       PL.append(mensagem)
+      contador += 1
     except AttributeError:
       print(mensagem)
   if contador == 10:
