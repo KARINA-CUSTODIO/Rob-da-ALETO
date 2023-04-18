@@ -76,7 +76,7 @@ def telegram_bot():
       for pl in PL:
         texto_PLs += pl + "\n\n"
         texto_resposta = texto_PLs
-      else:
+    else:
         texto_resposta = "Não entendi!"
     
     nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
