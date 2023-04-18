@@ -37,6 +37,7 @@ def projetos():
       PL.append(mensagem)
     except AttributeError:
       print(mensagem)
+      continue
   if contador == 10:
      return PL
 
