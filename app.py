@@ -60,7 +60,7 @@ def contato():
 def telegram_bot():
     update = request.json
     chat_id = None
-      if 'message' in update:
+    if 'message' in update:
       chat_id = update["message"]["chat"]["id"]
       print(chat_id)
       message = update["message"]["text"]
@@ -78,7 +78,7 @@ def telegram_bot():
         for pl in PL:
             texto_PLs += pl + "\n\n"
             texto_resposta = texto_PLs
-    else:
+      else:
         texto_resposta = "Não entendi!"
     
     nova_mensagem = {"chat_id": chat_id, "text": texto_resposta}
