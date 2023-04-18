@@ -9,7 +9,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 TELEGRAM_API_KEY = os.environ["TELEGRAM_API_KEY"]
 
-def projetos():
+def projetos(limite=10):
   # extraindo projetos de Lei e requerimentos
   resposta = requests.get('https://al.to.leg.br/materiasLegislativas')
   sopa = BeautifulSoup(resposta.content, 'html.parser')
@@ -17,7 +17,8 @@ def projetos():
   contador = 0
   PL = []
   for pl in PLs:
-    contador += 1
+    if contador == limite:
+      break
     try:
       titulo = pl.find('h4').text
       data = pl.find('p').text.split('|')[1].split(':')[1].strip()
@@ -26,11 +27,10 @@ def projetos():
       url = f'https://al.to.leg.br{path}'
       mensagem = f"{titulo} {data} \n {texto} \n {url} \n"
       PL.append(mensagem)
+      contador += 1
     except AttributeError:
       print(mensagem)
-      continue
-  if contador == 10:
-     return PL
+  return PL
 
 # Criando site
 
