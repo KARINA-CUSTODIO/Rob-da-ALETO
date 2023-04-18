@@ -64,15 +64,15 @@ def telegram_bot():
     sender_id = update["message"]["from"]["id"]
      
     PL = projetos()
-     
+       
     mensagens = ['oi', 'Oi', 'Olá', 'olá', 'ola', 'iai', 'qual é', 'e aí', "/start"]
     if message in mensagens:
        texto_resposta = f"Olá! Seja bem-vinda(o) {first_name}! Digite sim caso queira ver os últimos PLs da Assembleia Legislativa do Tocantins!"
     elif message == 'sim':
         mensagens = []
-        mensagem = ""
-    for pl in PL:
-        mensagem += f"{pl[0]} {pl[1]} \n {pl[2]}{pl[3]}\n"
+        for pl in PL:
+           mensagem = ""
+           mensagem += f"{pl[0]} {pl[1]} \n {pl[2]}{pl[3]}\n"
         if len(mensagem) > 4000:  
             mensagens.append(mensagem)  
             mensagem = ""
