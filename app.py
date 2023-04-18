@@ -59,7 +59,8 @@ def contato():
 
 def telegram_bot():
     update = request.json
-    if 'message' in update:
+    chat_id = None
+      if 'message' in update:
       chat_id = update["message"]["chat"]["id"]
       print(chat_id)
       message = update["message"]["text"]
